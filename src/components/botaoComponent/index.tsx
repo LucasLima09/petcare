@@ -1,17 +1,17 @@
-import { Pressable, View, StyleSheet } from "react-native";
-
-type Variante = "preenchido" | "vazado"
+import { Pressable, View, StyleSheet, Text } from "react-native";
 
 type BotaoComponentProps = {
     titulo: string
-    variante: Variante
+    apenasBorda: boolean
     onPress: () => void
 }
 
-export default function BotaoComponent({ titulo, variante, onPress }: BotaoComponentProps) {
+export default function BotaoComponent({ titulo, apenasBorda, onPress }: BotaoComponentProps) {
     return (
         <View>
-            <Pressable onPress={() => { onPress() }} style={[styles.botao, styles.botaoLogin]}><Text style={styles.botaoLetra}>{titulo}</Text></Pressable>
+            <Pressable onPress={() => { onPress() }} style={[styles.botao, apenasBorda ? styles.botaoVazado : styles.botaoPreenchido]}>
+                <Text style={apenasBorda ? styles.textoVazado : styles.botaoLetra}>{titulo}</Text>
+            </Pressable>
         </View>
     );
 }
@@ -38,5 +38,7 @@ const styles = StyleSheet.create({
     },
     textoVazado: {
         color: "#0F4D0F",
+        fontSize: 18,
+        fontWeight: "bold",
     },
 });

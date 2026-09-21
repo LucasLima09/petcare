@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button, Text, TextInput, View, StyleSheet, Pressable } from "react-native";
 import { loginUser } from "../services/authService";
+import BotaoComponent from "../components/botaoComponent";
 
 type LoginScreenProps = {
     navigation: any
@@ -23,12 +24,17 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
             <View style={styles.body}>
                 <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} />
                 <TextInput style={styles.input} placeholder="Senha" value={password} onChangeText={setPassword} />
-                <Pressable onPress={() => { handleLogin() }} style={[styles.botao, styles.botaoLogin]}><Text style={styles.botaoLetra}>Login</Text></Pressable>
-                <Text>ou</Text>
-                <Pressable
+                <BotaoComponent
+                    titulo="Login"
+                    apenasBorda={false}
+                    onPress={() => handleLogin()}
+                />
+                <Text style={{ marginHorizontal: "auto", fontSize: 16 }}>ou</Text>
+                <BotaoComponent
+                    titulo="Criar Conta"
+                    apenasBorda={true}
                     onPress={() => navigation.navigate("Register")}
-                    style={[styles.botao, styles.botaoRegister]}
-                ><Text style={styles.botaoLetra}>Criar conta</Text></Pressable>
+                />
             </View>
         </View>
     );
@@ -38,7 +44,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#0F4D0F",
-
     },
     header: {
         paddingHorizontal: 25,
@@ -53,7 +58,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 20,
         paddingHorizontal: 25,
         paddingTop: 40,
-        gap: 16,
+        gap: 14,
     },
     frase: {
         fontSize: 16,

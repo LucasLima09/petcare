@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { Button, Text, TextInput, View, StyleSheet, Pressable } from "react-native";
+import { Button, Text, TextInput, View, StyleSheet, Pressable, Alert } from "react-native";
 import { registerUser } from "../services/authService";
+import BotaoComponent from "../components/botaoComponent";
 
-type LoginScreenProps = {
+type Register = {
     navigation: any
 }
 
-export default function LoginScreen({ navigation }: LoginScreenProps) {
+export default function RegisterScreen({ navigation }: Register) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -15,7 +16,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
             await registerUser(email, password);
             limparCampos()
         } catch {
-            throw "Erro ao criar conta"
+            alert("Erro ao criar conta")
         }
     }
 
@@ -28,18 +29,16 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
         <View style={styles.container}>
             <View style={styles.header}>
                 <Text style={styles.logo1}>Pet<Text style={styles.logo2}>Care</Text></Text>
-                <Text style={styles.frase}>Organização do seu amigo em um lugar só</Text>
+                <Text style={styles.frase}>Carteira de vacinação digital</Text>
             </View>
             <View style={styles.body}>
                 <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} />
                 <TextInput style={styles.input} placeholder="Senha" value={password} onChangeText={setPassword} />
-                <Pressable onPress={() => { handleRegister() }} style={styles.botao}><Text style={styles.botaoLetra}>Cadastrar</Text></Pressable>
-                <View style={{ flexDirection: "row", gap: 5 }}>
-                    <Text>Já possui uma conta?</Text>
-                    <Pressable
-                        onPress={() => navigation.navigate("Login")}
-                    ><Text style={{ color: "#3C3CE8" }}>Entrar</Text></Pressable>
-                </View>
+                <BotaoComponent
+                    titulo="Criar"
+                    apenasBorda={false}
+                    onPress={() => handleRegister()}
+                />
             </View>
         </View>
     );
@@ -48,8 +47,7 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#070738",
-
+        backgroundColor: "#0F4D0F",
     },
     header: {
         paddingHorizontal: 25,
@@ -64,7 +62,7 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 20,
         paddingHorizontal: 25,
         paddingTop: 40,
-        gap: 16,
+        gap: 14,
     },
     frase: {
         fontSize: 16,
@@ -78,7 +76,7 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     logo2: {
-        color: "#4CAF50"
+        color: "#5CE65C"
     },
     input: {
         backgroundColor: "#FFFFFF",
@@ -90,16 +88,21 @@ const styles = StyleSheet.create({
         borderColor: "#DDD",
     },
     botao: {
-        backgroundColor: "#070738",
         borderRadius: 12,
         paddingVertical: 16,
         alignItems: "center",
         justifyContent: "center",
         marginTop: 10,
     },
+    botaoLogin: {
+        backgroundColor: "#0F4D0F",
+    },
+    botaoRegister: {
+        borderColor: "#0F4D0F",
+        borderWidth: 2,
+    },
     botaoLetra: {
         color: "white",
         fontSize: 18
-
     }
 });
