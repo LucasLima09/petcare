@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Text, TextInput, View, StyleSheet, Pressable } from "react-native";
+import { Button, Text, TextInput, View, StyleSheet, Pressable, ActivityIndicator } from "react-native";
 import { loginUser } from "../services/authService";
 import BotaoComponent from "../components/botaoComponent";
 
@@ -10,9 +10,21 @@ type LoginScreenProps = {
 export default function LoginScreen({ navigation }: LoginScreenProps) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState("")
 
     async function handleLogin() {
-        await loginUser(email, password);
+        try {
+            if (email.trim() !== "" && password.trim() !== "") {
+                setIsLoading(true)
+                await loginUser(email, password);
+            }
+
+        } catch {
+            setError("Usuário ou senha incorretos")
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     return (
@@ -24,8 +36,9 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
             <View style={styles.body}>
                 <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} />
                 <TextInput style={styles.input} placeholder="Senha" value={password} onChangeText={setPassword} />
+                {error ? <Text style={{ color: "red", marginHorizontal: "auto" }}>{error}</Text> : null}
                 <BotaoComponent
-                    titulo="Login"
+                    titulo={isLoading ? "Entrando..." : "Login"}
                     apenasBorda={false}
                     onPress={() => handleLogin()}
                 />

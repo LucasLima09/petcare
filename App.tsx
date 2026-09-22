@@ -1,7 +1,10 @@
-import Routes from './src/routes';
+import { AuthProvider } from './src/routes/authContext';
+import Routes from './src/routes/rootNavigator';
 
 export default function App() {
   return (
-    <Routes />
+    <AuthProvider>
+      <Routes />
+    </AuthProvider>
   );
 }
