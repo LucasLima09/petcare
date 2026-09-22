@@ -6,7 +6,7 @@ type BotaoComponentProps = {
     onPress: () => void
 }
 
-export default function BotaoComponent({ titulo, apenasBorda, onPress }: BotaoComponentProps) {
+export default function LoginButton({ titulo, apenasBorda, onPress }: BotaoComponentProps) {
     return (
         <View>
             <Pressable onPress={() => { onPress() }} style={[styles.botao, apenasBorda ? styles.botaoVazado : styles.botaoPreenchido]}>

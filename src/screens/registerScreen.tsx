@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button, Text, TextInput, View, StyleSheet, Pressable, Alert } from "react-native";
 import { registerUser } from "../services/authService";
-import BotaoComponent from "../components/botaoComponent";
+import BotaoComponent from "../components/loginButtonComponent";
 
 type Register = {
     navigation: any

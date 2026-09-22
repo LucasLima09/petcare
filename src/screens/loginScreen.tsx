@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Button, Text, TextInput, View, StyleSheet, Pressable, ActivityIndicator } from "react-native";
+import { Text, TextInput, View, StyleSheet } from "react-native";
 import { loginUser } from "../services/authService";
-import BotaoComponent from "../components/botaoComponent";
+import LoginButton from "../components/loginButtonComponent";
 
 type LoginScreenProps = {
     navigation: any
@@ -37,13 +37,13 @@ export default function LoginScreen({ navigation }: LoginScreenProps) {
                 <TextInput style={styles.input} placeholder="Email" value={email} onChangeText={setEmail} />
                 <TextInput style={styles.input} placeholder="Senha" value={password} onChangeText={setPassword} />
                 {error ? <Text style={{ color: "red", marginHorizontal: "auto" }}>{error}</Text> : null}
-                <BotaoComponent
+                <LoginButton
                     titulo={isLoading ? "Entrando..." : "Login"}
                     apenasBorda={false}
                     onPress={() => handleLogin()}
                 />
                 <Text style={{ marginHorizontal: "auto", fontSize: 16 }}>ou</Text>
-                <BotaoComponent
+                <LoginButton
                     titulo="Criar Conta"
                     apenasBorda={true}
                     onPress={() => navigation.navigate("Register")}
