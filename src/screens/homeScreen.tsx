@@ -1,9 +1,11 @@
-import { Button, Modal, TextInput, View, StyleSheet, Pressable, Text } from "react-native";
+import { Button, FlatList, Modal, TextInput, View, StyleSheet, Pressable, Text } from "react-native";
 import { logoutUser } from "../services/authService";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Pet } from "../types/pet";
-import { addPet } from "../services/petService";
+import { addPet, listPets } from "../services/petService";
 import { SexoSelector } from "../components/sexoButtonComponent";
+import PetCard from "../components/petCard";
+import { useNavigation } from "@react-navigation/native";
 
 export default function HomeScreen() {
 
@@ -14,8 +16,23 @@ export default function HomeScreen() {
     const [peso, setPeso] = useState("")
     const [sexo, setSexo] = useState<'Macho' | 'Fêmea'>("Macho")
     const [observacao, setObservacao] = useState("")
+    const [pets, setPets] = useState<Pet[]>([])
 
-    console.log(sexo)
+    const navigation = useNavigation<any>()
+
+    useEffect(() => {
+        carregarPets()
+    }, [])
+
+    async function carregarPets() {
+        try {
+            const lista = await listPets()
+            setPets(lista)
+        } catch (erro) {
+            console.log(erro)
+        }
+    }
+
     function adicionarPet() {
         const novoPet: Pet = {
             nome: nomePet,
@@ -26,7 +43,7 @@ export default function HomeScreen() {
             observacoes: observacao,
         }
 
-        addPet(novoPet);
+        addPet(novoPet).then(carregarPets);
     }
 
     return (
@@ -38,6 +55,27 @@ export default function HomeScreen() {
             <Button
                 title="Adicionar Pet"
                 onPress={() => setIsModalVisible(true)}
+            />
+
+            <FlatList
+                data={pets}
+                keyExtractor={(item) => item.id ?? ""}
+                renderItem={({ item }) => (
+                    <Pressable
+                        onPress={() => navigation.navigate('Detalhes', { petId: item.id })}
+                    >
+                        <PetCard
+                            nome={item.nome}
+                            raca={item.raca}
+                            observacoes={item.observacoes}
+                            dataNascimento={item.dataNascimento}
+                            peso={item.peso}
+                            sexo={item.sexo}
+                        />
+                    </Pressable>
+
+                )}
+                contentContainerStyle={{ gap: 10, padding: 10 }}
             />
 
             <Modal
@@ -97,5 +135,5 @@ const styles = StyleSheet.create({
     botaoLetra: {
         color: "white",
         fontSize: 18
-    }
+    },
 });

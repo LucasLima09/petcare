@@ -1,5 +1,5 @@
 export interface Vacina {
-    id: string;
+    id?: string;
     idPet: string;
     idDono: string;
     nome: string;
@@ -7,5 +7,5 @@ export interface Vacina {
     proximaDose: string;
     veterinario: string;
     clinica: string;
-    observacoes: string;
+    observacoes?: string;
 }

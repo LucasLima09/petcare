@@ -6,6 +6,6 @@ export interface Pet {
     dataNascimento: string;
     peso: number;
     sexo: "Macho" | "Fêmea";
-    observacoes: string;
+    observacoes?: string;
     criadoEm?: string;
 }
