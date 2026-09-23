@@ -6,6 +6,7 @@ import { addPet, listPets } from "../services/petService";
 import { SexoSelector } from "../components/sexoButtonComponent";
 import PetCard from "../components/petCard";
 import { useNavigation } from "@react-navigation/native";
+import Icon from '@expo/vector-icons/Ionicons';
 
 export default function HomeScreen() {
 
@@ -33,29 +34,41 @@ export default function HomeScreen() {
         }
     }
 
+    function limparCampos() {
+        setNomePet("")
+        setRaca("")
+        setDataNascimento("")
+        setPeso("")
+        // setSexo("")
+        setObservacao("")
+    }
+
     function adicionarPet() {
-        const novoPet: Pet = {
-            nome: nomePet,
-            raca: raca,
-            dataNascimento: dataNascimento,
-            peso: Number(peso),
-            sexo: sexo,
-            observacoes: observacao,
+        try {
+            const novoPet: Pet = {
+                nome: nomePet,
+                raca: raca,
+                dataNascimento: dataNascimento,
+                peso: Number(peso),
+                sexo: sexo,
+                observacoes: observacao,
+            }
+
+            addPet(novoPet).then(carregarPets);
+        } catch (error) {
+            console.log(error)
         }
 
-        addPet(novoPet).then(carregarPets);
     }
 
     return (
-        <View>
-            <Button
-                title="Sair"
+        <View style={styles.container}>
+            <Pressable
+                style={{ marginBottom: 20, alignSelf: "flex-end" }}
                 onPress={() => logoutUser()}
-            />
-            <Button
-                title="Adicionar Pet"
-                onPress={() => setIsModalVisible(true)}
-            />
+            >
+                <Icon name="exit-outline" size={30} />
+            </Pressable>
 
             <FlatList
                 data={pets}
@@ -75,15 +88,27 @@ export default function HomeScreen() {
                     </Pressable>
 
                 )}
-                contentContainerStyle={{ gap: 10, padding: 10 }}
+                contentContainerStyle={{ gap: 10 }}
             />
+
+            <Pressable
+                style={styles.botao}
+                onPress={() => setIsModalVisible(true)}>
+                <Text style={styles.botaoLetra}>Adicionar Pet</Text>
+            </Pressable>
 
             <Modal
                 visible={isModalVisible}
                 onRequestClose={() => setIsModalVisible(false)}
                 animationType="slide"
             >
-                <View style={{ flex: 1, padding: 30, gap: 20 }}>
+                <Pressable
+                    style={{ margin: 10, alignSelf: "flex-start" }}
+                    onPress={() => setIsModalVisible(false)}
+                >
+                    <Icon name="close" size={30} />
+                </Pressable>
+                <View style={{ flex: 1, padding: 20, gap: 20 }}>
                     <TextInput style={styles.input} placeholder="Nome do Pet" placeholderTextColor={"grey"} value={nomePet} onChangeText={setNomePet} />
                     <TextInput style={styles.input} placeholder="Raça" placeholderTextColor={"grey"} value={raca} onChangeText={setRaca} />
                     <TextInput style={styles.input} placeholder="Data de Nascimento" placeholderTextColor={"grey"} value={dataNascimento} onChangeText={setDataNascimento} />
@@ -112,7 +137,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#0F4D0F",
+        margin: 20
     },
     input: {
         backgroundColor: "#FFFFFF",
@@ -130,7 +155,16 @@ const styles = StyleSheet.create({
         paddingVertical: 16,
         alignItems: "center",
         justifyContent: "center",
-        marginTop: 10,
+        marginTop: 12,
+    },
+    botaoSair: {
+        margin: 10,
+        backgroundColor: "red",
+        borderRadius: 12,
+        paddingVertical: 12,
+        paddingHorizontal: 14,
+        alignItems: "center",
+        justifyContent: "flex-end",
     },
     botaoLetra: {
         color: "white",
