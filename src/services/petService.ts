@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, query, where } from "firebase/firestore";
 import { Pet } from "../types/pet";
 import { auth, db } from "./firebase";
 
@@ -33,4 +33,23 @@ export async function listPets(): Promise<Pet[]> {
     })
 
     return pets
+}
+
+export async function getPetById(idPet: string): Promise<Pet> {
+    const idDono = auth.currentUser?.uid
+
+    if (!idDono || String(idDono) === "") {
+        throw "Erro ao buscar id do usuário"
+    }
+
+    const docRef = doc(db, "pets", idPet)
+    const docSnap = await getDoc(docRef)
+
+    if (!docSnap.exists()) {
+        throw "Pet não existe"
+    }
+
+    const pet: Pet = { id: docSnap.id, ...docSnap.data() } as Pet
+
+    return pet
 }
