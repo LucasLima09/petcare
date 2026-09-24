@@ -1,5 +1,4 @@
-import { Button, FlatList, Modal, TextInput, View, StyleSheet, Pressable, Text } from "react-native";
-import { logoutUser } from "../services/authService";
+import { FlatList, Modal, TextInput, View, StyleSheet, Pressable, Text } from "react-native";
 import { useEffect, useState } from "react";
 import { Pet } from "../types/pet";
 import { addPet, listPets } from "../services/petService";
@@ -55,6 +54,7 @@ export default function HomeScreen() {
             }
 
             addPet(novoPet).then(carregarPets);
+            limparCampos()
         } catch (error) {
             console.log(error)
         }
@@ -63,33 +63,30 @@ export default function HomeScreen() {
 
     return (
         <View style={styles.container}>
-            <Pressable
-                style={{ marginBottom: 20, alignSelf: "flex-end" }}
-                onPress={() => logoutUser()}
-            >
-                <Icon name="exit-outline" size={30} />
-            </Pressable>
+            {pets.length > 0 ?
+                <FlatList
+                    data={pets}
+                    keyExtractor={(item) => item.id ?? ""}
+                    renderItem={({ item }) => (
+                        <Pressable
+                            onPress={() => navigation.navigate('Detalhes', { petId: item.id })}
+                        >
+                            <PetCard
+                                nome={item.nome}
+                                raca={item.raca}
+                                observacoes={item.observacoes}
+                                dataNascimento={item.dataNascimento}
+                                peso={item.peso}
+                                sexo={item.sexo}
+                            />
+                        </Pressable>
 
-            <FlatList
-                data={pets}
-                keyExtractor={(item) => item.id ?? ""}
-                renderItem={({ item }) => (
-                    <Pressable
-                        onPress={() => navigation.navigate('Detalhes', { petId: item.id })}
-                    >
-                        <PetCard
-                            nome={item.nome}
-                            raca={item.raca}
-                            observacoes={item.observacoes}
-                            dataNascimento={item.dataNascimento}
-                            peso={item.peso}
-                            sexo={item.sexo}
-                        />
-                    </Pressable>
-
-                )}
-                contentContainerStyle={{ gap: 10 }}
-            />
+                    )}
+                    contentContainerStyle={{ gap: 10 }}
+                />
+                :
+                <Text style={{ textAlign: "center", fontSize: 16, color: "#666", flex: 1, justifyContent: "center", alignContent: "center" }}>Nenhum pet encontrado</Text>
+            }
 
             <Pressable
                 style={styles.botao}
