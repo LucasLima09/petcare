@@ -1,11 +1,12 @@
 import { useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { Text, View, StyleSheet, FlatList } from "react-native";
+import { Text, View, StyleSheet, FlatList, Image } from "react-native";
 import { Vacina } from "../types/vacina";
 import { listVacinas } from "../services/vacinaService";
 import { Pet } from "../types/pet";
 import { getPetById } from "../services/petService";
 import VacinaCard from "../components/vacinaCard";
+import Icon from '@expo/vector-icons/Ionicons';
 
 export default function DetalhesScreen() {
 
@@ -40,8 +41,14 @@ export default function DetalhesScreen() {
 
     return (
         <View style={styles.container}>
-            <View style={styles.card}>
+            <View style={styles.carteirinha}>
                 <View style={styles.header}>
+                    <View style={styles.avatar}>
+                        <Image
+                            style={styles.avatarImage}
+                            source={{ uri: pet?.imagem }}
+                        />
+                    </View>
                     <View style={{ flex: 1 }}>
                         <Text style={styles.nome}>{pet?.nome}</Text>
                         <Text style={styles.raca}>{pet?.raca}</Text>
@@ -53,19 +60,24 @@ export default function DetalhesScreen() {
 
                 <View style={styles.divisor} />
 
-                <View style={styles.linhaInfo}>
-                    <Text style={styles.rotulo}>Data de Nascimento</Text>
-                    <Text style={styles.valor}>{pet?.dataNascimento}</Text>
+                <View style={styles.info}>
+                    <View style={styles.linhaInfo}>
+                        <Text style={styles.rotulo}>Nascimento</Text>
+                        <Text style={styles.valor}>{pet?.dataNascimento || "-"}</Text>
+                    </View>
+                    <View style={styles.linhaInfo}>
+                        <Text style={styles.rotulo}>Peso</Text>
+                        <Text style={styles.valor}>{pet?.peso}kg</Text>
+                    </View>
+                    <View style={styles.linhaInfo}>
+                        <Text style={styles.rotulo}>Observações</Text>
+                        <Text style={styles.valor}>{pet?.observacoes || "-"}</Text>
+                    </View>
                 </View>
 
-                <View style={styles.linhaInfo}>
-                    <Text style={styles.rotulo}>Peso</Text>
-                    <Text style={styles.valor}>{pet?.peso}kg</Text>
-                </View>
-
-                <View style={styles.linhaInfo}>
-                    <Text style={styles.rotulo}>Observações</Text>
-                    <Text style={styles.valor}>{pet?.observacoes || "-"}</Text>
+                <View style={styles.footer}>
+                    <Icon name="paw" size={18} color="#0F4D0F" />
+                    <Text style={styles.footerTexto}>Carteirinha PetCare</Text>
                 </View>
             </View>
             <Text style={styles.titulo}>Vacinas</Text>
@@ -102,13 +114,18 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#0F4D0F",
     },
-    card: {
+    carteirinha: {
         backgroundColor: "#FFFFFF",
-        borderRadius: 12,
+        borderRadius: 16,
         borderWidth: 1,
         borderColor: "#DDD",
-        padding: 16,
-        gap: 12,
+        padding: 18,
+        gap: 14,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
     },
     header: {
         flexDirection: "row",
@@ -120,8 +137,11 @@ const styles = StyleSheet.create({
         height: 56,
         borderRadius: 28,
         backgroundColor: "#0F4D0F",
-        alignItems: "center",
-        justifyContent: "center",
+        overflow: "hidden",
+    },
+    avatarImage: {
+        width: "100%",
+        height: "100%",
     },
     avatarTexto: {
         color: "#FFFFFF",
@@ -150,12 +170,16 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
     },
     divisor: {
-        height: 1,
-        backgroundColor: "#EEE",
+        borderBottomWidth: 1,
+        borderBottomColor: "#EEE",
+    },
+    info: {
+        gap: 12,
     },
     linhaInfo: {
         flexDirection: "row",
         justifyContent: "space-between",
+        alignItems: "center",
         gap: 16,
     },
     rotulo: {
@@ -168,5 +192,20 @@ const styles = StyleSheet.create({
         fontWeight: "600",
         flexShrink: 1,
         textAlign: "right",
+    },
+    footer: {
+        flexDirection: "row",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: 6,
+        paddingTop: 12,
+        borderTopWidth: 1,
+        borderTopColor: "#EEE",
+        borderStyle: "dashed",
+    },
+    footerTexto: {
+        fontSize: 13,
+        color: "#0F4D0F",
+        fontWeight: "600",
     },
 });

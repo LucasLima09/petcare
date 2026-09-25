@@ -17,7 +17,7 @@ export default function HomeScreen() {
     const [sexo, setSexo] = useState<'Macho' | 'Fêmea'>("Macho")
     const [observacao, setObservacao] = useState("")
     const [pets, setPets] = useState<Pet[]>([])
-
+    const [imagem, setImagem] = useState("")
     const navigation = useNavigation<any>()
 
     useEffect(() => {
@@ -38,6 +38,7 @@ export default function HomeScreen() {
         setRaca("")
         setDataNascimento("")
         setPeso("")
+        setImagem("")
         // setSexo("")
         setObservacao("")
     }
@@ -51,6 +52,7 @@ export default function HomeScreen() {
                 peso: Number(peso),
                 sexo: sexo,
                 observacoes: observacao,
+                imagem: imagem,
             }
 
             addPet(novoPet).then(carregarPets);
@@ -78,6 +80,7 @@ export default function HomeScreen() {
                                 dataNascimento={item.dataNascimento}
                                 peso={item.peso}
                                 sexo={item.sexo}
+                                imagem={item.imagem}
                             />
                         </Pressable>
 
@@ -121,6 +124,7 @@ export default function HomeScreen() {
                         />
                     </View>
                     <TextInput style={styles.input} placeholder="Observação" placeholderTextColor={"grey"} value={observacao} onChangeText={setObservacao} />
+                    <TextInput style={styles.input} placeholder="Imagem" placeholderTextColor={"grey"} value={imagem} onChangeText={setImagem} />
                     <Pressable
                         style={styles.botao}
                         onPress={() => adicionarPet()}

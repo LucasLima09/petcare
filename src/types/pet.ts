@@ -8,4 +8,5 @@ export interface Pet {
     sexo: "Macho" | "Fêmea";
     observacoes?: string;
     criadoEm?: string;
+    imagem?: string;
 }

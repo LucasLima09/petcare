@@ -7,6 +7,7 @@ type PetCardProps = {
     sexo: string
     dataNascimento: string
     observacoes?: string
+    imagem?: string
 }
 
 export default function PetCard({ nome, raca, peso, sexo, dataNascimento, observacoes }: PetCardProps) {
