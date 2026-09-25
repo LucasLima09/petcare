@@ -18,11 +18,12 @@ export default function HomeScreen() {
     const [observacao, setObservacao] = useState("")
     const [pets, setPets] = useState<Pet[]>([])
     const [imagem, setImagem] = useState("")
+
     const navigation = useNavigation<any>()
 
     useEffect(() => {
         carregarPets()
-    }, [])
+    }, [pets])
 
     async function carregarPets() {
         try {
@@ -34,6 +35,7 @@ export default function HomeScreen() {
     }
 
     function limparCampos() {
+        setIsModalVisible(false)
         setNomePet("")
         setRaca("")
         setDataNascimento("")
@@ -55,7 +57,7 @@ export default function HomeScreen() {
                 imagem: imagem,
             }
 
-            addPet(novoPet).then(carregarPets);
+            addPet(novoPet);
             limparCampos()
         } catch (error) {
             console.log(error)
@@ -91,10 +93,15 @@ export default function HomeScreen() {
                 <Text style={{ textAlign: "center", fontSize: 16, color: "#666", flex: 1, justifyContent: "center", alignContent: "center" }}>Nenhum pet encontrado</Text>
             }
 
+            {/* <Icon name="add-circle" size={70} color="#0F4D0F" style={{ alignSelf: "center" }} onPress={() => setIsModalVisible(true)} /> */}
+
             <Pressable
                 style={styles.botao}
                 onPress={() => setIsModalVisible(true)}>
-                <Text style={styles.botaoLetra}>Adicionar Pet</Text>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 10 }}>
+                    <Text style={styles.botaoLetra}>Adicionar Pet</Text>
+                    <Icon name="add-circle-outline" size={20} color="white" />
+                </View>
             </Pressable>
 
             <Modal
@@ -138,7 +145,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        margin: 20
+        margin: 20,
     },
     input: {
         backgroundColor: "#FFFFFF",
