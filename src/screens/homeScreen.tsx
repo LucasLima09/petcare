@@ -23,7 +23,7 @@ export default function HomeScreen() {
 
     useEffect(() => {
         carregarPets()
-    }, [pets])
+    }, [])
 
     async function carregarPets() {
         try {
@@ -45,7 +45,7 @@ export default function HomeScreen() {
         setObservacao("")
     }
 
-    function adicionarPet() {
+    async function adicionarPet() {
         try {
             const novoPet: Pet = {
                 nome: nomePet,
@@ -57,7 +57,8 @@ export default function HomeScreen() {
                 imagem: imagem,
             }
 
-            addPet(novoPet);
+            await addPet(novoPet);
+            carregarPets()
             limparCampos()
         } catch (error) {
             console.log(error)
