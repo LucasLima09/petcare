@@ -1,20 +1,57 @@
 import { useRoute } from "@react-navigation/native";
 import { useEffect, useState } from "react";
-import { Text, View, StyleSheet, FlatList, Image } from "react-native";
+import { Text, View, StyleSheet, FlatList, Image, Modal, Pressable, TextInput } from "react-native";
 import { Vacina } from "../types/vacina";
-import { listVacinas } from "../services/vacinaService";
+import { listVacinas, salvarVacina } from "../services/vacinaService";
 import { Pet } from "../types/pet";
 import { getPetById } from "../services/petService";
 import VacinaCard from "../components/vacinaCard";
 import Icon from '@expo/vector-icons/Ionicons';
+import { SexoSelector } from "../components/sexoButtonComponent";
 
 export default function DetalhesScreen() {
 
     const [vacinas, setVacinas] = useState<Vacina[]>([])
     const [pet, setPet] = useState<Pet>()
+    const [isModalVacinaVisible, setIsModalVacinaVisible] = useState(false)
+    const [nomeVacina, setNomeVacina] = useState("")
+    const [dataAplicacao, setDataAplicacao] = useState("")
+    const [proximaDose, setProximaDose] = useState("")
+    const [veterinario, setVeterinario] = useState("")
+    const [clinica, setClinica] = useState("")
+    const [observacoes, setObservacoes] = useState("")
 
     const route = useRoute<any>();
     const petId = route.params.petId;
+
+    async function adicionarVacina() {
+        try {
+            const novaVacina: Vacina = {
+                idPet: petId,
+                nome: nomeVacina,
+                dataAplicacao: dataAplicacao,
+                proximaDose: proximaDose,
+                veterinario: veterinario,
+                clinica: clinica,
+                observacoes: observacoes
+            }
+            await salvarVacina(novaVacina)
+            limparCampos()
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }
+
+    function limparCampos() {
+        setIsModalVacinaVisible(false)
+        setNomeVacina("")
+        setDataAplicacao("")
+        setProximaDose("")
+        setVeterinario("")
+        setClinica("")
+        setObservacoes("")
+    }
 
     async function carregarVacinas() {
         try {
@@ -80,7 +117,10 @@ export default function DetalhesScreen() {
                     <Text style={styles.footerTexto}>Carteirinha PetCare</Text>
                 </View>
             </View>
-            <Text style={styles.titulo}>Vacinas</Text>
+            <View style={styles.tituloContainer}>
+                <Text style={styles.titulo}>Vacinas</Text>
+                <Icon name="add-circle" size={40} color="#0F4D0F" onPress={() => setIsModalVacinaVisible(true)} />
+            </View>
             {vacinas.length > 0 ?
                 <FlatList
                     data={vacinas}
@@ -94,10 +134,35 @@ export default function DetalhesScreen() {
                             clinica={item.clinica}
                             observacoes={item.observacoes}
                         />}
+                    contentContainerStyle={{ gap: 5 }}
                 />
                 :
                 <Text style={{ textAlign: "center", fontSize: 16, color: "#666", flex: 1, alignContent: "center" }}>Nenhuma vacina encontrada</Text>
             }
+            <Modal
+                visible={isModalVacinaVisible}
+                onRequestClose={() => setIsModalVacinaVisible(false)}
+                animationType="slide"
+            >
+                <Pressable
+                    style={{ margin: 10, alignSelf: "flex-start" }}
+                    onPress={() => setIsModalVacinaVisible(false)}
+                >
+                    <Icon name="close" size={30} />
+                </Pressable>
+                <View style={{ flex: 1, padding: 20, gap: 20 }}>
+                    <TextInput style={styles.input} placeholder="Nome da Vacina" placeholderTextColor={"grey"} value={nomeVacina} onChangeText={setNomeVacina} />
+                    <TextInput style={styles.input} placeholder="Data de Aplicação" placeholderTextColor={"grey"} value={dataAplicacao} onChangeText={setDataAplicacao} />
+                    <TextInput style={styles.input} placeholder="Proxima Dose" placeholderTextColor={"grey"} value={proximaDose} onChangeText={setProximaDose} />
+                    <TextInput style={styles.input} placeholder="Veterinário" placeholderTextColor={"grey"} value={veterinario} onChangeText={setVeterinario} />
+                    <TextInput style={styles.input} placeholder="Clínica" placeholderTextColor={"grey"} value={clinica} onChangeText={setClinica} />
+                    <TextInput style={styles.input} placeholder="Observações" placeholderTextColor={"grey"} value={observacoes} onChangeText={setObservacoes} />
+                    <Pressable
+                        style={styles.botao}
+                        onPress={() => adicionarVacina()}
+                    ><Text style={styles.botaoLetra}>Adicionar</Text></Pressable>
+                </View>
+            </Modal>
         </View>
     );
 }
@@ -113,6 +178,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: "bold",
         color: "#0F4D0F",
+    },
+    tituloContainer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: 12,
     },
     carteirinha: {
         backgroundColor: "#FFFFFF",
@@ -157,6 +228,16 @@ const styles = StyleSheet.create({
     raca: {
         fontSize: 14,
         color: "#666",
+    },
+    input: {
+        backgroundColor: "#FFFFFF",
+        borderRadius: 12,
+        paddingHorizontal: 16,
+        paddingVertical: 14,
+        fontSize: 16,
+        borderWidth: 1,
+        borderColor: "#DDD",
+
     },
     badge: {
         backgroundColor: "#E8F5E8",
@@ -207,5 +288,17 @@ const styles = StyleSheet.create({
         fontSize: 13,
         color: "#0F4D0F",
         fontWeight: "600",
+    },
+    botao: {
+        backgroundColor: "green",
+        borderRadius: 12,
+        paddingVertical: 16,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 12,
+    },
+    botaoLetra: {
+        color: "white",
+        fontSize: 18
     },
 });

@@ -1,4 +1,4 @@
-import { collection, getDocs, query, where } from "firebase/firestore"
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore"
 import { auth, db } from "./firebase"
 import { Vacina } from "../types/vacina"
 
@@ -18,4 +18,14 @@ export async function listVacinas(idPet: string): Promise<Vacina[]> {
     })
 
     return vacinas
+}
+
+export async function salvarVacina(vacina: Vacina): Promise<void> {
+    const idDono = auth.currentUser?.uid
+
+    if (!idDono || String(idDono) === "") {
+        throw "Erro ao buscar id do usuário"
+    }
+
+    await addDoc(collection(db, "vacinas"), { ...vacina, idDono })
 }
